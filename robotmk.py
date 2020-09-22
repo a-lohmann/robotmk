@@ -1,4 +1,4 @@
-
+import os
 import ctypes
 import win32api
 import win32event
@@ -62,7 +62,10 @@ def run_process(command_line):
  
    process_arguments = (console_user_token, None,
                        command_line,
-                       None, None, 0, 0,None, None,
+                       None, None, 0, 
+                       0,
+                       None, 
+                       os.path.dirname(os.path.realpath(__file__)),
                        startupinfo)
  
    log_debug(f'Starting: {command_line}')

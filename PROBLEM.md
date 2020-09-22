@@ -16,15 +16,24 @@ Robot-Tests als "normaler" Benutzer starten zu müssen, kann folgende Gründe ha
 
 Das RobotmK-PLugin muss deshalb imstande sein, die Ausführung eines Robot-Tests ggf. auf dem Desktop des angemeldeten Benutzers zu starten. 
 
-Dises Minimalbeispiel ist reduziert auf die Ausführung von `notepad.exe` auf dem User-Desktop.
+`robotmk.py` ist ein abgespecktes Minimalbeispiel auf Basis des Original-Plugins und reduziert auf die Ausführung von `notepad.exe` auf dem User-Desktop.
 
+Das Problem kann als "gelöst" betrachtet werden, wenn folgende Punkte erfüllt sind: 
+
+* Der Agent läuft weiter unter `SYSTEM` (N.B: den Dienst unter dem Account des Users laufen lassen, ist a) nicht schön und b) keine Lösung, weil er dann immer noch ein *Dienst* ist und in Session 0 isoliert läuft)
+* Der Agent startet das PLugin `robotmk.py`
+* Im Plugin wird der aktuell angemeldete User ausgelesen und in dessen Kontext `notepad.exe` gestartet
+* `Notepad` erscheint auf dem Desktop des angemeldeten Benutzers.
 
 ## Installation Minimalbeispiel
+
+Hinweis: es ist keine Verbindung zum CheckMK-Server notwendig!
 
 * Checkmk-Agenten installieren
 * Python für Windows (vorher ggf. in den Windows-Einstellungen nach "Alias" suchen und die Ausführungs-Aliase für Python entfernen)
 * Zum Debuggen: Sysinternal Tools (https://docs.microsoft.com/en-us/sysinternals/downloads/)
 * Agenten-Config-Datei `C:\ProgramData\checkmk\agent\bakery\check_mk.bakery.yml` anlegen: 
+
 ```
 global:
   enabled: true
@@ -38,11 +47,15 @@ plugins:
       async: yes
       timeout: 180
 ```
-* Python-Plugin `robotmk.py` in `C:\ProgramData\checkmk\agent\plugins` ablegen
+* Python-Plugin `robotmk.py` und `security_enums.py` in `C:\ProgramData\checkmk\agent\plugins` ablegen
 
 ## Tests
 
 ### 1) OK: Manueller Aufruf als SYSTEM 
+
+Start einer cmd mit dem gleichen Benutzer, wie der des CMK-Agenten
+
+(PSExec ggf. in PATH aufnehmen)
 
 ```
 C:\Users\vagrant>psexec -s cmd.exe
@@ -77,13 +90,13 @@ Das Script wartet, bis der Editor geschlossen wird und beendet sich dann.
 2020-09-22 08:25:59,818 DEBUG - Prozess beendet, rc: 0
 ```
 
-### 2) NOK: Aufruf über CheckMK-Agent
+### 2) FEHLER: Aufruf über CheckMK-Agent
 
 Agenten-Service starten, `robotmk.py` wird automatisch als Plugin aufgerufen. 
 
 ![](./err-img/2.png)
 
-Man sieht, dass sowohl die SYSTEM-cmd, als auch der Checkmk-Agent unter dem selben User laufen (SYSTEM), in der selben Session ID (0). 
+Man sieht, dass sowohl die SYSTEM-cmd, als auch der Checkmk-Agent unter dem selben User laufen (SYSTEM) - und auch in der selben Session ID (0). 
 Das Plugin stirbt aber kurz nach dem Start und zeigt im Log folgenden Fehler: 
 
 ```
@@ -153,10 +166,13 @@ Der Fehler, der beim Start über den Dienst kommt, lässt sich so zwar auf der c
 
 ## Referenzen
 
+* Warum es gehen *muss*: https://techcommunity.microsoft.com/t5/ask-the-performance-team/application-compatibility-session-0-isolation/ba-p/372361 
 * http://dcuktec.blogspot.com/2009/05/python-on-windows-from-service-launch.html - hiervon stammt die Idee, den angemeldeten User aus der win32ts auszulesen
+* Ein Beispiel mit Powershell: https://forums.apc.com/spaces/7/ups-management-devices-powerchute-software/forums/general/12714/-fyi-how-to-run-executable-in-user-session-from-service-session-0 
 * https://mail.python.org/pipermail/python-win32/2008-October/008341.html : 
 
 ```
+...
 The long and the short of it, if you have a service that needs to
 interact with the user, then the basic outline of the steps you will
 need to perform is:
@@ -168,6 +184,10 @@ need to perform is:
     <remove SE_TCB_NAME privilege>
     token.Close()
 ```
+
+## Mögliche Workarounds
+
+* Powershell-Plugin schreiben, welches den Userwechsel isoliert (siehe Referenzen)
 
 ## Doku
 
