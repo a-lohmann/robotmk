@@ -5,7 +5,7 @@
 **Ausführung von Robot-Tests in der Windows-Sitzung des aktuell angemeldeten Benutzers**
 
 
-Windows-Dienste (wie der Checmk-Agent) sind von Benutzerprozessen durch die "Session ID" getrennt, d.h. Dienste laufen grundsätzlich mit ID 0, alle anderen Prozesse mit ID 1. Kommunikation/Interaktion zwischen diesen Bereichen ist per se nicht vorgesehen und muss programmatisch gelöst werden. 
+Windows-Dienste (wie der Checmk-Agent) sind von Benutzerprozessen durch die "Session ID" getrennt, d.h. Dienste laufen grundsätzlich mit ID 0, alle anderen Prozesse mit ID 1+. Kommunikation/Interaktion zwischen diesen Bereichen ist per se nicht vorgesehen und muss programmatisch gelöst werden. (Gute Erklärung der "Session 0-Isolation": https://techcommunity.microsoft.com/t5/ask-the-performance-team/application-compatibility-session-0-isolation/ba-p/372361)
 
 Webbasierte Robot-Tests können problemlos vom Checkmk-Agenten getriggert werden; sie laufen dann ebenfalls unter `NT AUTHORITY/SYSTEM` und Sesion ID 0; die Browser arbeiten dann headless. 
 
@@ -117,9 +117,6 @@ check_mk_agent.exe test
 * Problem existiert auch auf anderem Betriebssystem (kein "Inselproblem")
 * Mit ProcessMonitor (Sysinternals) bereits versucht, den beiden augenscheinlich identisch Aufrufen hinterherzustalken, aber da kommt man in den Wald. 
 
-# Working Examples
-* https://www.programmersought.com/article/54251019809/ => 
-* https://mail.python.org/pipermail/python-win32/2008-October/008341.html
 
 
 
@@ -184,6 +181,9 @@ need to perform is:
     <remove SE_TCB_NAME privilege>
     token.Close()
 ```
+
+* https://www.programmersought.com/article/54251019809/ => Lösung mit LogonUser (statt Bestimmung des aktuellen Users)
+* https://mail.python.org/pipermail/python-win32/2008-October/008341.html
 
 ## Mögliche Workarounds
 
