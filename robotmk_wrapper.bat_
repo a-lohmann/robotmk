@@ -1,0 +1,4 @@
+@ECHO ON
+
+python "%~dp0\robotmk.py
+REM start cmd /C python "%~dp0\robotmk.py

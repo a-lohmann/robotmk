@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Plugin: Optional execution of robot with the currently logged in user (#44); makes
+  it possible to use libraries like SikuliX, ImageHorizon etc.
+
+### Changed
+
+- The default path of `outputdir` has changed on Windows and is now fixed to c:/windows/temp.
+  Debugging is alot more easier when we know where to search for the XML.
+
+
 ## [v0.1.3] - 2020-0-16
 ### Added 
 
