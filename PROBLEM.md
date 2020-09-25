@@ -116,7 +116,7 @@ check_mk_agent.exe test
 * Die Environments der SYSTEM-cmd.exe und des check_mk_agent sind fast identisch (der Agent hat noch MK-spezifische Variablen)
 * Problem existiert auch auf anderem Betriebssystem (kein "Inselproblem")
 * Mit ProcessMonitor (Sysinternals) bereits versucht, den beiden augenscheinlich identisch Aufrufen hinterherzustalken, aber da kommt man in den Wald. 
-
+* Der Agent-Prozess, bzw. dessen Token hat das Privileg, das Token des angemeldeten Users zu suchen (WTSQueryUserToken). TCP (TrustedComputerBase) ist enabled, das sieht man, wenn man die Zeilen "dump_token" aktiviert. 
 
 
 
