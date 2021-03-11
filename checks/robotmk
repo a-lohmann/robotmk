@@ -18,6 +18,8 @@
 # to the Free Software Foundation, Inc., 51 Franklin St,  Fifth Floor,
 # Boston, MA 02110-1301 USA.
 
+from cmk.base.check_api import host_name
+from cmk.base.check_api import host_extra_conf_merged
 import tempfile
 from collections import namedtuple
 import os
@@ -70,7 +72,7 @@ iam = "robotmk"
 inventory_robotmk_rules = []
 
 
-def parse_robot(info):
+def parse_robot(info, *args):
     keys_to_decode = ['xml', 'htmllog']
     robot_discovery_settings = get_setting('robot_discovery_settings', [])
     try:
