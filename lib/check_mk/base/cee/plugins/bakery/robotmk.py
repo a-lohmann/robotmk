@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8; py-indent-offset: 4 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # (c) 2020 Simon Meggle <simon.meggle@elabit.de>
 
@@ -18,12 +18,31 @@
 # to the Free Software Foundation, Inc., 51 Franklin St,  Fifth Floor,
 # Boston, MA 02110-1301 USA.
 
-import cmk.utils.paths
+from typing import Iterable, TypedDict, List
+from cmk.utils.exceptions import MKGeneralException
+from pathlib import Path
+import shutil
 import os
 import yaml
 import re
 import copy
-from cmk.utils.exceptions import MKGeneralException
+
+from .bakery_api.v1 import (
+   OS,
+   Plugin,
+   PluginConfig,
+   Scriptlet,
+   WindowsConfigEntry,
+   DebStep,
+   RpmStep,
+   SolStep,
+   SystemBinary,
+   register,
+   quote_shell_string,
+   FileGenerator,
+   ScriptletGenerator,
+   WindowsConfigGenerator,
+)
 
 
 def bake_robotmk(opsys, conf, conf_dir, plugins_dir):
@@ -108,14 +127,14 @@ class RMKConfigAdapter():
         'linux': {
             'newline': "\n",
             'robotdir': "/usr/lib/check_mk_agent/robot",
-            'rmk_ctrl': 'robotmk',
-            'rmk_runner': 'robotmk-runner'
+            'rmk_ctrl': 'robotmk.py',
+            'rmk_runner': 'robotmk-runner.py'
         },
         'posix': {
             'newline': "\n",
             'robotdir': "/usr/lib/check_mk_agent/robot",
-            'rmk_ctrl': 'robotmk',
-            'rmk_runner': 'robotmk-runner'
+            'rmk_ctrl': 'robotmk.py',
+            'rmk_runner': 'robotmk-runner.py'
         },
         'noarch': {
             'cache_time': 900,
@@ -185,7 +204,7 @@ class RMKConfigAdapter():
                 robot_param_dict = suite_tuple[3].get('robot_params', {})
                 # Variables: transform the var 'list of tuples' into a dict.
                 vardict = {}
-                for (k1, v1) in robot_param_dict.iteritems():
+                for (k1, v1) in robot_param_dict.items():
                     if k1 == 'variable':
                         for t in v1:
                             vardict.update({t[0]: t[1]})
