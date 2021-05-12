@@ -2,17 +2,34 @@
 
 # This script fixes the permissions for all robotmk files which are symlinked into OMD. 
 # (switching branches makes files write-protected for the site user)
+# !! CMK V2 only !!
 
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
+SITE=$1
+OMDSITES=/opt/omd/sites
 
-# bakery script
-chmod 666 lib/check_mk/base/cee/plugins/bakery/robotmk.py
+function relink {
+    chmod 666 $1
+    if [ "x$SITE" != "x" ]; then 
+        TARGET="$SCRIPTPATH/$1"
+        LINKNAME="$OMDSITES/$SITE/$2"
+        echo "Linking $TARGET into OMD site $SITE ..."
+        ln -fs $TARGET $LINKNAME       
+    fi
+}
+
 # Check plugin
-chmod 666 lib/check_mk/base/plugins/agent_based/robotmk.py
+relink lib/check_mk/base/plugins/agent_based/robotmk.py  local/lib/check_mk/base/plugins/agent_based/
+# bakery script
+relink lib/check_mk/base/cee/plugins/bakery/robotmk.py   local/lib/check_mk/base/cee/plugins/bakery/
 # Agent plugins
-chmod 666 agents/plugins/*.py
+relink agents/plugins/robotmk.py                         local/share/check_mk/agents/plugins/
+relink agents/plugins/robotmk-runner.py                  local/share/check_mk/agents/plugins/
 # Metrics
-chmod 666 web/plugins/metrics/robotmk.py
+relink web/plugins/metrics/robotmk.py                    local/share/check_mk/web/plugins/metrics/
 # WATO pages
-chmod 666 web/plugins/wato/*.py
+relink web/plugins/wato/robotmk_wato_params_bakery.py    local/share/check_mk/web/plugins/wato/
+relink web/plugins/wato/robotmk_wato_params_check.py     local/share/check_mk/web/plugins/wato/
+relink web/plugins/wato/robotmk_wato_params_discovery.py local/share/check_mk/web/plugins/wato/
+
