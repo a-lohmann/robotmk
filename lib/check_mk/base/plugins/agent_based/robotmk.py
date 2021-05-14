@@ -113,16 +113,15 @@ def discover_robotmk(params, section):
                 item_svc_name = add_svc_prefix(discovered_item.name,
                                                json_suite,
                                                params)
-                yield Service(item='foo')
-                # yield Service(item=item_svc_name)
+                yield Service(item=item_svc_name)
 
     # The meta service reporting overall runtimes, stale spool files etc.
-    # svc_robotmk = params.get('robotmk_service_name', 'Robotmk')
-    # yield Service(item=svc_robotmk)
+    svc_robotmk = params.get('robotmk_service_name', 'Robotmk')
+    yield Service(item=svc_robotmk)
     
 # v2 check
-def check_robotmk(params, section):
-    yield "foo"
+def check_robotmk(item, params, section):
+    yield Result(state=State.OK, summary='FOO')
     pass
 
 
@@ -135,8 +134,7 @@ def check_robotmk(params, section):
 # v2register
 register.check_plugin(
     name="robotmk",
-    # TODO: Weg damit
-    service_name="FOO",
+    service_name="%s",
     discovery_function=discover_robotmk,
     discovery_ruleset_name='inventory_robotmk_rules',
     discovery_ruleset_type=register.RuleSetType.MERGED,   
