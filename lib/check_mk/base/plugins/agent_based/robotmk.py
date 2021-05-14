@@ -858,8 +858,10 @@ class RobotSuite(RobotItem):
     xpath_name = 'suite'
     # which subnode types are allowed
     allowed_subnodes = ['suite', 'test']
-    symbol_ok = u"\u25ef"
-    symbol_nok = u"\u2b24"
+    symbol_ok = "\u25ef"
+    # symbol_ok = "25ef"
+    symbol_nok = "\u2b24"
+    # symbol_nok = "2b24"
     # which key in dict output_depth is holding the values for tests
     output_depth_dict_key = "output_depth_suites"
     runtime_threshold_dict_key = "runtime_threshold_suites"
@@ -882,8 +884,10 @@ class RobotTest(RobotItem):
     xpath_name = 'test'
     # which subnode types are allowed
     allowed_subnodes = ['kw']
-    symbol_ok = u"\u25a1"
-    symbol_nok = u"\u25a0"
+    symbol_ok = "\u25a1"
+    # symbol_ok = "25a1"
+    symbol_nok = "\u25a0"
+    # symbol_nok = "25a0"
     # which key in dict output_depth is holding the values for tests
     output_depth_dict_key = "output_depth_tests"
     runtime_threshold_dict_key = "runtime_threshold_tests"
@@ -912,8 +916,10 @@ class RobotKeyword(RobotItem):
     xpath_name = 'kw'
     # which subnode types are allowed
     allowed_subnodes = ['kw']
-    symbol_ok = u"\u25cb"
-    symbol_nok = u"\u25cf"
+    symbol_ok = "\u25cb"
+    # symbol_ok = "25cb"
+    symbol_nok = "\u25cf"
+    # symbol_nok = "25cf"
     # which key in dict output_depth is holding the values for keywords
     output_depth_dict_key = "output_depth_keywords"
     runtime_threshold_dict_key = "runtime_threshold_keywords"
