@@ -40,12 +40,6 @@ from .bakery_api.v1 import (
    SystemBinary
 )
 
-<<<<<<< HEAD
-# This dict only adds the new key if the value is not empty
-class DictNoNone(dict):
-    def __setitem__(self, key, value):
-        if key in self or bool(value):
-=======
 # This dict only adds the new key only if 
 # * the key already exists
 # * the value is a boolean in fact 
@@ -54,7 +48,6 @@ class DictNoNone(dict):
 class DictNoNone(dict):
     def __setitem__(self, key, value):
         if (key in self or type(value) is bool) or bool(value):
->>>>>>> Bakery works (mode: serial + external)
             dict.__setitem__(self, key, value)
 
 
