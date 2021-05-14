@@ -19,10 +19,12 @@ function relink {
     fi
 }
 
+# Version specific ####
 # Check plugin
 relink lib/check_mk/base/plugins/agent_based/robotmk.py  local/lib/check_mk/base/plugins/agent_based/
 # bakery script
 relink lib/check_mk/base/cee/plugins/bakery/robotmk.py   local/lib/check_mk/base/cee/plugins/bakery/
+
 # Agent plugins
 relink agents/plugins/robotmk.py                         local/share/check_mk/agents/plugins/
 relink agents/plugins/robotmk-runner.py                  local/share/check_mk/agents/plugins/
